@@ -1,0 +1,66 @@
+﻿@using Fakturisanje.Models;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@if (Session["user"] == null)
+{
+    <h3>Morate biti ulogovani.</h3>
+    <h4><a href="~/Account/Login">Povratak na stranicu za logovanje.</a></h4>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <h4>Spisak faktura</h4>
+        </div>
+    </div>
+    <section class="lista-faktura container">
+        <div class="row">
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <td>Broj dokumenta</td>
+                        <td>Broj fakture</td>
+                        <td>Datum izdavanja</td>
+                        <td>Iznos</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Invoice invoice in Document.GetInvoices())
+                    {
+                    <tr>
+                        <td>@invoice.DocumentId</td>
+                        <td>@invoice.InvoiceId</td>
+                        <td>@invoice.InvoiceDate.ToString(string.Format("dd.MM.yyyy."))</td>
+                        @if (invoice.Total == null)
+                        {
+                            <td>0.00</td>
+                        }
+                        else
+                        {
+                            <td>@invoice.Total.Value.ToString("0.00")</td>
+                        }
+                        <td>@Html.ActionLink("Izmeni", "EditInvoice", new { id = invoice.DocumentId })</td>
+                        @if (Session["user"].Equals("saradnik"))
+                        {
+                            <td>@Html.ActionLink("Obriši", "DeleteInvoice", new { id = invoice.DocumentId })</td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            @if (Session["user"].Equals("saradnik"))
+            {
+                @Html.ActionLink("Napravi fakturu", "Create", "Invoice", null, new { @class = "btn btn-default" })
+
+            }
+        </div>
+    </section>
+
+}
+
+

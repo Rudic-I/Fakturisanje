@@ -1,0 +1,153 @@
+﻿@using Fakturisanje.Models
+@model Fakturisanje.Models.InvoiceModel
+
+@{
+    ViewBag.Title = "EditInvoice";
+}
+
+@if (Session["user"] == null)
+{
+    <h3>Morate biti ulogovani.</h3>
+    <h4><a href="~/Account/Login">Povratak na stranicu za logovanje.</a></h4>
+}
+else
+{
+    <section class="invoice" style="border:1px solid black;">
+        @using (Html.BeginForm("EditInvoice", "Invoice", FormMethod.Post))
+        {
+            if (Session["user"].Equals("saradnik"))
+            {
+                <div class="invoice-heading">
+                    <div class="invoice-no">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DocumentId, "Broj dokumenta")
+                            @Html.TextBoxFor(m => m.DocumentId, new { @readonly = "readonly", @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InvoiceId, "Broj fakture")
+                            @Html.TextBoxFor(m => m.InvoiceId, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.InvoiceId)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InvoiceDate, "Datum fakture")
+                            @Html.TextBoxFor(m => m.InvoiceDate, "{0:dd.MM.yyyy.}", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.InvoiceDate)
+                        </div>
+                    </div>
+                </div>
+                <div class="invoice-body">
+                    @if (Item.GetFields(Model.DocumentId).Count > 0)
+                    {
+                        int counter = 1;
+                        double total = 0;
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td>Redni broj</td>
+                                    <td>Stavka</td>
+                                    <td>Cena</td>
+                                    <td>Količina</td>
+                                    <td>Ukupno</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Field field in Item.GetFields(Model.DocumentId))
+                                {
+                                    double sum = field.Amount * field.Price;
+                                    total += sum;
+                                    <tr>
+                                        <td>@counter</td>
+                                        <td>@field.FieldName</td>
+                                        <td>@field.Price.ToString("0.00")</td>
+                                        <td>@field.Amount</td>
+                                        <td>@sum.ToString("0.00")</td>
+                                    </tr>
+                                    counter++;
+                                }
+                            </tbody>
+                        </table>
+                        <div class="form-group text-right">
+                            @Html.LabelFor(m => m.Total, "Total")
+                            @Html.TextBoxFor(m => m.Total, new { @Value = total, @readonly = "readonly", @class = "total" })
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="invoice-heading">
+                    <div class="invoice-no">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.DocumentId, "Broj dokumenta")
+                            @Html.TextBoxFor(m => m.DocumentId, new { @readonly = "readonly", @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InvoiceId, "Broj fakture")
+                            @Html.TextBoxFor(m => m.InvoiceId, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.InvoiceId)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.InvoiceDate, "Datum fakture")
+                            @Html.TextBoxFor(m => m.InvoiceDate, "{0:dd.MM.yyyy.}", new { @readonly = "readonly", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                int counter = 1;
+                double total = 0;
+                <div class="invoice-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <td>Redni broj</td>
+                                <td>Stavka</td>
+                                <td>Cena</td>
+                                <td>Količina</td>
+                                <td>Ukupno</td>
+                            </tr>
+                        </thead>
+                        <tbody class="field-body">
+                            @foreach (Field field in Item.GetFields(Model.DocumentId))
+                            {
+                                double sum = field.Amount * field.Price;
+                                total += sum;
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>@field.FieldName</td>
+                                    <td>@field.Price.ToString("0.00")</td>
+                                    <td>@field.Amount</td>
+                                    <td>@sum.ToString("0.00")</td>
+                                    <td>@Html.ActionLink("Izmeni", "EditField", new { id = field.FieldId })</td>
+                                    <td>@Html.ActionLink("Obriši", "DeleteField", new { id = field.FieldId })</td>
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-group text-right">
+                        @Html.LabelFor(m => m.Total, "Total")
+                        @Html.TextBoxFor(m => m.Total, new { @Value = total, @readonly = "readonly", @class = "total"})
+                    </div>
+                    <div class="new-field-box">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.FieldName, "Stavka")
+                            @Html.TextBoxFor(m => m.FieldName, new { @class = "input-field form-control"})
+                            <label id="lblName"></label>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Price, "Cena")
+                            @Html.TextBoxFor(m => m.Price, new { @class = "input-field form-control" })
+                            <label id="lblPrice"></label>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Amount, "Količina")
+                            @Html.TextBoxFor(m => m.Amount, new { @class = "input-field form-control" })
+                            <label id="lblAmount"></label>
+                        </div>
+                        <input type="button" value="Dodaj" name="submitBtn" class="btn btn-default btn-dodaj" onclick="checkField()" id="btn-field-check"/>
+                    </div>
+                </div>
+            }
+            <input type="submit" value="Izmeni fakturu" name="submitBtn" class="btn btn-default btn-izmeni" />
+        }
+    </section>
+}

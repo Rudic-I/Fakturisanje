@@ -1,0 +1,58 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #899cb0;
+}
+body {
+    padding-top: 0;
+}
+.btn-default {
+    background-color: #899cb0;
+    color: #fff;
+}
+.btn-dodaj {
+    margin-left:20px;
+}
+.btn-odjava {
+    margin-top: 20px;
+}
+.login-form{
+    border: 1px solid black;
+    padding:35px;
+}
+.form-group{
+    margin-bottom:25px;
+}
+main {
+    margin-top: 20px;
+}
+.invoice {
+    padding: 30px;
+    border: 1px solid #000;
+    box-shadow: 5px 5px 5px #899cb0;
+}
+.invoice-heading {
+    border-bottom:2px solid #000;
+}
+thead {
+    font-weight: bold;
+}
+.new-field-box {
+    margin-top:50px;
+}
+.invoice-body {
+    padding: 20px 0;
+    border-bottom: 2px solid #000;
+}
+.btn-izmeni {
+    margin-top: 50px;
+}
+input[readonly]{
+    background-color: #e9e9e9;
+}
+.total {
+    padding: 5px;
+    width: 130px;
+}

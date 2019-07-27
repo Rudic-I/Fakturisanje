@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h6 class="navbar-brand">Fakturisanje</h6>
+                </div>
+                @if (Session["user"] != null)
+                {
+                    <div class="col-md-4 text-right">
+                        @Html.ActionLink("Odjava", "Logout", "Account", null, new { @class = "btn btn-default btn-odjava" })
+                    </div>
+                }
+
+            </div>
+        </div>
+    </header>
+    <main class="container body-content">
+        @RenderBody()
+        <hr />
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year - Ivana Rudic</p>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/validate.js"></script>
+</body>
+</html>
